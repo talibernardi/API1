@@ -22,6 +22,16 @@ namespace API1.Models
         public string Genero { get; set; }
         [Range (1, 600, ErrorMessage = "A duração deve ter no mínimo 1 e no máximo 600 minutos")]
         public int Duracao { get; set; }
-        
+
+        [Required(ErrorMessage = "O campo IdLivro é obrigatório")]
+        public int IdLivro { get; set; }
+
+        public string Tipo
+        {
+            get
+            {
+                return "Filme";
+            }
+        }
     }
 }

@@ -4,9 +4,11 @@ using API1.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FilmesApi.Controllers
@@ -16,7 +18,7 @@ namespace FilmesApi.Controllers
     public class FilmeController : ControllerBase
     {
         private FilmeContext _context;
-        private IMapper _mapper; 
+        private IMapper _mapper;
         public FilmeController(FilmeContext context, IMapper mapper)
         {
             _context = context;
@@ -24,14 +26,19 @@ namespace FilmesApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
+        public async Task<ActionResult> AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
             Filme filme = _mapper.Map<Filme>(filmeDto);
 
+            var res = await API1.Services.Livro.requisita(filme.IdLivro);
 
-            _context.Filmes.Add(filme);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
+            if (res.IsSuccessStatusCode) {
+                _context.Filmes.Add(filme);
+                _context.SaveChanges();
+                return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
+            }
+
+            return UnprocessableEntity();
         }
 
         [HttpGet]
@@ -41,7 +48,7 @@ namespace FilmesApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult RecuperaFilmesPorId(int id)
+        public IActionResult RecuperaFilmesPorId(int id)//classe de entrada (2 propriedades: int, string)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme != null)
@@ -51,6 +58,31 @@ namespace FilmesApi.Controllers
             };
                 
             return NotFound();
+        }
+
+        [HttpGet("/wiki/{titulo}")]
+        public async Task<IActionResult> RecuperaLivrosPorNome(string titulo)
+        {
+            // Filme
+            var filme = _context.Filmes.Where(filme => filme.Titulo.Contains(titulo)).FirstOrDefault();
+
+            if (filme == null) {
+                return NoContent();
+            }
+
+            ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);
+
+            // Requisicao Livro
+            var response = await API1.Services.Livro.requisita(filme.Id);
+            var content = await response.Content.ReadAsStringAsync();
+            Livro livro = JsonConvert.DeserializeObject<Livro>(content);
+
+            // Lista
+            var list = new List<dynamic>();
+            list.Add(filme);
+            list.Add(livro);
+
+            return Ok(list);
         }
 
         [HttpPut("{id}")]

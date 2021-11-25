@@ -12,7 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Consulra.cs" />
+    <Compile Remove="Controllers\Consulta.cs" />
     <Compile Remove="Controllers\WeatherForecastController.cs" />
+    <Compile Remove="Data\Dtos\FilmeELivroRetorno.cs" />
+    <Compile Remove="Data\Dtos\TResult.cs" />
+    <Compile Remove="Models\FilmeELivroRetorno.cs" />
+    <Compile Remove="Models\FilmeLivro.cs" />
+    <Compile Remove="Models\LivroModel.cs" />
+    <Compile Remove="Services\async.cs" />
     <Compile Remove="WeatherForecast.cs" />
   </ItemGroup>
 
@@ -28,6 +36,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>

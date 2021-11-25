@@ -8,7 +8,6 @@ namespace API1.Data.Dtos
 {
     public class ReadFilmeDto
     {
-
         [Key]
         [Required]
 
@@ -25,6 +24,16 @@ namespace API1.Data.Dtos
         public int Duracao { get; set; }
 
         public DateTime HoraDaConsulta { get; set; }
+
+        public int IdLivro { get; set; }
+
+        public string Tipo
+        {
+            get
+            {
+                return "Filme";
+            }
+        }
     }
 }
     
