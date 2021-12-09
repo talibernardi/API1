@@ -16,7 +16,6 @@ namespace API1.Data.Dtos
 
         public int Duracao { get; set; }
 
-        public int IdLivro { get; set; }
     }
 
 }

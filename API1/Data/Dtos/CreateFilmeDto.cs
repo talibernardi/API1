@@ -8,7 +8,6 @@ namespace API1.Data.Dtos
 {
     public class CreateFilmeDto
     {
-
         public string Titulo { get; set; }
 
         public string Diretor { get; set; }
@@ -16,7 +15,5 @@ namespace API1.Data.Dtos
         public string Genero { get; set; }
 
         public int Duracao { get; set; }
-
-        public int IdLivro { get; set; }
     }
 }

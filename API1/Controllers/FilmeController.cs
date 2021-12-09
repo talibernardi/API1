@@ -30,15 +30,9 @@ namespace FilmesApi.Controllers
         {
             Filme filme = _mapper.Map<Filme>(filmeDto);
 
-            var res = await API1.Services.Livro.requisita(filme.Titulo);
-
-            if (res.IsSuccessStatusCode) {
-                _context.Filmes.Add(filme);
-                _context.SaveChanges();
-                return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
-            }
-
-            return UnprocessableEntity();
+            _context.Filmes.Add(filme);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
         }
 
         [HttpGet]
@@ -103,13 +97,12 @@ namespace FilmesApi.Controllers
         public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
-            if(filme == null)
-            {
-                return NotFound();
+            if(filme == null) {
+                return NoContent();
             }
             _mapper.Map(filmeDto, filme);
             _context.SaveChanges();
-            return NoContent();
+            return Ok();
         }
         
         [HttpDelete("{id}")]
