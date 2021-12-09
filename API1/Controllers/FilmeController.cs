@@ -30,7 +30,7 @@ namespace FilmesApi.Controllers
         {
             Filme filme = _mapper.Map<Filme>(filmeDto);
 
-            var res = await API1.Services.Livro.requisita(filme.IdLivro);
+            var res = await API1.Services.Livro.requisita(filme.Titulo);
 
             if (res.IsSuccessStatusCode) {
                 _context.Filmes.Add(filme);
@@ -48,7 +48,7 @@ namespace FilmesApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult RecuperaFilmesPorId(int id)//classe de entrada (2 propriedades: int, string)
+        public IActionResult RecuperaFilmesPorId(int id)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme != null)
@@ -73,7 +73,7 @@ namespace FilmesApi.Controllers
             ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);
 
             // Requisicao Livro
-            var response = await API1.Services.Livro.requisita(filme.Id);
+            var response = await API1.Services.Livro.requisita(filme.Titulo);
             var content = await response.Content.ReadAsStringAsync();
             Livro livro = JsonConvert.DeserializeObject<Livro>(content);
 
@@ -83,6 +83,20 @@ namespace FilmesApi.Controllers
             list.Add(livro);
 
             return Ok(list);
+        }
+
+        [HttpGet("/filme/titulo/{titulo}")]
+        public async Task<IActionResult> RecuperaLivroPorTitulo(string titulo)
+        {
+
+            var filme = _context.Filmes.Where(filme => filme.Titulo.Contains(titulo)).FirstOrDefault();
+
+            if (filme == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(filme);
         }
 
         [HttpPut("{id}")]

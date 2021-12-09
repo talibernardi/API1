@@ -10,29 +10,17 @@ namespace API1.Services
 {
     public class Livro
     {
-        public static  async Task<HttpResponseMessage> requisita(int id)
+        public static  async Task<HttpResponseMessage> requisita(string titulo)
         {
             var client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:3333/");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // HTTP GET
-            HttpResponseMessage response = await client.GetAsync("livro/" + id);
+            HttpResponseMessage response = await client.GetAsync("livro/titulo/" + titulo);
 
             return response;
         }
 
-        public async Task<string> ChamaLivroApi(List<Filme> filmes)
-        {
-            var result = "";
-            foreach (var filme in filmes)
-            {
-                var res = await requisita(filme.IdLivro);
-
-                result = await res.Content.ReadAsStringAsync();
-            }
-
-            return result;
-        }
     }
 }
