@@ -83,7 +83,7 @@ namespace FilmesApi.Controllers
         public async Task<IActionResult> RecuperaLivroPorTitulo(string titulo)
         {
 
-            var filme = _context.Filmes.Where(filme => filme.Titulo.Contains(titulo)).FirstOrDefault();
+            var filme = _context.Filmes.Where(filme => filme.Titulo.Contains(titulo));
 
             if (filme == null)
             {
